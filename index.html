@@ -69,21 +69,21 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="log">Console Log</button>
+      <button id="error">Console Error</button>
+      <button id="count">Console Count</button>
+      <button id="warn">Console Warn</button>
+      <button id="assert">Console Assert</button>
+      <button id="clear">Console Clear</button>
+      <button id="dir">Console Dir</button>
+      <button id="dirxml">Console dirxml</button>
+      <button id="groupStart">Console Group Start</button>
+      <button id="groupEnd">Console Group End</button>
+      <button id="table">Console Table</button>
+      <button id="startTimer">Start Timer</button>
+      <button id="endTimer">End Timer</button>
+      <button id="trace">Console Trace</button>
+      <button id="triggerError">Trigger a Global Error</button>
     </section>
   </main>
 
@@ -95,13 +95,92 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        let num1 = Number(firstNum);
+        let num2 = Number(secondNum);
+
+        // Check if inputs are valid numbers
+        if (isNaN(num1) || isNaN(num2)) {
+          throw new Error('One or both inputs are not valid numbers');
+        }
+
+        // Check if numbers are provided
+        if (firstNum === '' || secondNum === '') {
+          throw new Error('Please enter both numbers.');
+        }
+
+        // Check for division by zero
+        if (operator === '/' && Number(secondNum) === 0) {
+          throw new Error('Division by zero is not allowed');
+        }
+
+        // Perform the calculation
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        output.innerHTML = 'Error: ' + error.message;
+      } finally {
+        console.log('Calculation attempted with values:', firstNum, operator, secondNum);
+      }
+
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    errorBtns.forEach(button => {
+      button.addEventListener('click', () => {
+        switch (button.id) {
+          case 'log':
+            console.log('Console Log: Button clicked');
+            break;
+          case 'error':
+            console.error('Console Error: Button clicked');
+            break;
+          case 'count':
+            console.count('Console Count');
+            break;
+          case 'warn':
+            console.warn('Console Warn: Button clicked');
+            break;
+          case 'assert':
+            console.assert(false, 'Console Assert: Assertion failed');
+            break;
+          case 'clear':
+            console.clear();
+            break;
+          case 'dir':
+            console.dir(document.body);
+            break;
+          case 'dirxml':
+            console.dirxml(document);
+            break;
+          case 'groupStart':
+            console.group('Console Group Start');
+            console.log('Inside Group');
+            break;
+          case 'groupEnd':
+            console.groupEnd();
+            break;
+          case 'table':
+            console.table([{ name: 'Alice', age: 30 }, { name: 'Bob', age: 25 }]);
+            break;
+          case 'startTimer':
+            console.time('Timer');
+            break;
+          case 'endTimer':
+            console.timeEnd('Timer');
+            break;
+          case 'trace':
+            console.trace('Console Trace: Button clicked');
+            break;
+          default:
+            console.log('Button not handled');
+        }
+      });
+    });
   </script>
 </body>
 
