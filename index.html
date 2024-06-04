@@ -50,13 +50,13 @@
 
   <!-- TrackJS script!!!!-->
 
-  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <!-- <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>n -->
   <script>
-    TrackJS.install({
-      token: "e725ca02cef843f289bc400cac6fa9e2",
-      application: "error-calculator"
+    //TrackJS.install({
+    //  token: "e725ca02cef843f289bc400cac6fa9e2",
+    //  application: "error-calculator"
     // for more configuration options, see https://docs.trackjs.com
-    });
+    //});
   </script>
 </head>
 
@@ -220,12 +220,10 @@
       });
     });
 
-    window.onerror = function(message, source, lineNum, colNum, error) {
-      console.log("Uh oh! Global error caought! ", {
+    window.onerror = function(message, source, error) {
+      console.log("Uh oh! Global error caught! ", {
       message,
       source,
-      lineNum,
-      colNum,
       error
     });
     return true;
