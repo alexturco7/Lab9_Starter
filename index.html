@@ -47,6 +47,17 @@
       width: 122px;
     }
   </style>
+
+  <!-- TrackJS script!!!!-->
+
+  <!-- <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>n -->
+  <script>
+    //TrackJS.install({
+    //  token: "e725ca02cef843f289bc400cac6fa9e2",
+    //  application: "error-calculator"
+    // for more configuration options, see https://docs.trackjs.com
+    //});
+  </script>
 </head>
 
 <body>
@@ -88,6 +99,21 @@
   </main>
 
   <script>
+
+    //errors\\
+    class InputError extends Error {
+      constructor(message){
+        super(message);
+        this.name = 'InputError';
+      }
+    }
+    class DivisionByZeroError extends Error {
+      constructor(){
+        super('Division by zero is not allowed');
+        this.name = 'DivisionByZeroError';
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -102,23 +128,31 @@
 
         // Check if inputs are valid numbers
         if (isNaN(num1) || isNaN(num2)) {
-          throw new Error('One or both inputs are not valid numbers');
+          throw new InputError('One or both inputs are not valid numbers');
         }
 
         // Check if numbers are provided
         if (firstNum === '' || secondNum === '') {
-          throw new Error('Please enter both numbers.');
+          throw new InputError('Please enter both numbers.');
         }
 
         // Check for division by zero
         if (operator === '/' && Number(secondNum) === 0) {
-          throw new Error('Division by zero is not allowed');
+          throw new DivisionByZeroError();
         }
 
         // Perform the calculation
         output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
       } catch (error) {
-        output.innerHTML = 'Error: ' + error.message;
+
+        if (error instanceof InputError || error instanceof DivisionByZeroError) { 
+          console.error('Uh oh! Custom error caught! ', error);
+        }
+        else {
+          console.error('Uh oh! General error caught! ', error);
+        }
+
+        output.innerHTML = `${error.name}: ${error.message}`;
       } finally {
         console.log('Calculation attempted with values:', firstNum, operator, secondNum);
       }
@@ -176,11 +210,24 @@
           case 'trace':
             console.trace('Console Trace: Button clicked');
             break;
+          case 'triggerError':
+            thisFunctionMayNotExist(thisVarMayNotExistNeither);
+            break;
           default:
             console.log('Button not handled');
+
         }
       });
     });
+
+    window.onerror = function(message, source, error) {
+      console.log("Uh oh! Global error caught! ", {
+      message,
+      source,
+      error
+    });
+    return true;
+    };
   </script>
 </body>
 
